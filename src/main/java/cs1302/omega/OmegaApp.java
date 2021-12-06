@@ -51,7 +51,7 @@ public class OmegaApp extends Application {
 
     /**
      * {@inheritDoc}
-     *
+     * 
      * @param stage Stage object.
      * @throws Exception
      */
@@ -74,27 +74,17 @@ public class OmegaApp extends Application {
 
     /**
      * {@inheritDoc}
-     *
      * @param gc Graphical overlay which contains the drawn-in game elements.
      */
     private void run(GraphicsContext gc) {
-
-        // background color
-        gc.setFill(Color.BLACK);
+        gc.setFill(Color.BLACK); // background color
         gc.fillRect(0, 0, width, height);
-
-        // text color
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.WHITE); // text color
         gc.setFont(Font.font(35));
-
         if (gameIsStarted) {
-
-            // ball movement
-            ballXPosition += ballXSpeed;
+            ballXPosition += ballXSpeed;  // ball movement
             ballYPosition += ballYSpeed;
-
-            // computer movement
-            if (playerOneScore == playerTwoScore) {
+            if (playerOneScore == playerTwoScore) {  // computer movement
                 if (ballXPosition < width - width / 4) {
                     playerTwoYPosition = ballYPosition - (PLAYER_HEIGHT / 2);
                 } else {
@@ -103,49 +93,32 @@ public class OmegaApp extends Application {
                             : playerTwoYPosition - 1.525;
                 }
             }
-
-            // drawing the ball
-            gc.fillOval(ballXPosition, ballYPosition, BALL_SIZE, BALL_SIZE);
+            gc.fillOval(ballXPosition, ballYPosition, BALL_SIZE, BALL_SIZE); // drawing the ball
         } else {
             gc.setStroke(Color.WHITE);
             gc.setTextAlign(TextAlignment.CENTER);
-
-            // text at game launch
-            if (playerOneScore == 0 && playerTwoScore == 0) {
+            if (playerOneScore == 0 && playerTwoScore == 0) { // text at game launch
                 gc.strokeText("Click to Start", width / 2, height / 2);
             }
-
-            // prompt to continue playing
-            if (playerOneScore != 0 || playerTwoScore != 0) {
+            if (playerOneScore != 0 || playerTwoScore != 0) { // prompt to continue playing
                 gc.strokeText("Click to Start the Next Round", width / 2, height / 2);
             }
-
-            // ball position reset
-            ballXPosition = width / 2;
-            ballYPosition = height / 2;
-
-            // reset ball speed & direction
-            ballXSpeed = (new Random().nextInt(3) == 0) ? 1 : -1;
-
-            ballYSpeed = (new Random().nextInt(3) == 0) ? 1 : -1;
+            ballXPosition = width / 2; // ball position reset
+            ballYPosition = height / 2; // ball position reset
+            ballXSpeed = (new Random().nextInt(3) == 0) ? 1 : -1; // reset ball speed & direction
+            ballYSpeed = (new Random().nextInt(3) == 0) ? 1 : -1; // reset ball speed & direction
         }
-
-        // ball stays in canvas
-        if (ballYPosition > height || ballYPosition < 0)
+        if (ballYPosition > height || ballYPosition < 0) { // ball stays in canvas
             ballYSpeed *= -1;
-
-        // player score increment
-        if (ballXPosition > playerTwoXPosition + PLAYER_WIDTH) {
+        }
+        if (ballXPosition > playerTwoXPosition + PLAYER_WIDTH) { // player score increment
             playerOneScore++;
             gameIsStarted = false;
         }
-
-        // computer score increment
-        if (ballXPosition < playerOneXPosition - PLAYER_WIDTH) {
+        if (ballXPosition < playerOneXPosition - PLAYER_WIDTH) { // computer score increment
             playerTwoScore++;
             gameIsStarted = false;
         }
-
         // // ball speed increase after every bounce between sides
         if (((ballXPosition + BALL_SIZE > playerTwoXPosition) && ballYPosition >= playerTwoYPosition
                 && ballYPosition <= playerTwoYPosition + PLAYER_HEIGHT) ||
@@ -156,46 +129,12 @@ public class OmegaApp extends Application {
             int redirectionAngler = (rand.nextInt(4) - 5) == 0 ? 4 : -4;
             ballYSpeed += Math.signum(ballYSpeed) * redirectionAngler;
             ballXSpeed += Math.signum(ballXSpeed);
-
             ballXSpeed *= -1;
             ballYSpeed *= -1;
         }
-
-        // show score
-        gc.fillText(playerOneScore + "\t" + playerTwoScore, width / 2, 100);
-
-        // draw pong paddles
+        gc.fillText(playerOneScore + "\t" + playerTwoScore, width / 2, 100); // show score
         gc.fillRect(playerTwoXPosition, playerTwoYPosition, PLAYER_WIDTH, PLAYER_HEIGHT);
         gc.fillRect(playerOneXPosition, playerOneYPosition, PLAYER_WIDTH, PLAYER_HEIGHT);
-
-        // draw center line
-        gc.strokeLine(width / 2, height, width / 2, height * -1);
-
-        /**
-         * dynamic difficulty adjustment:
-         * if player one has more points computer opponent gets faster and if player one has less
-         * points computer opponent gets slower. when player one has an equal amount of points to
-         * player two then
-         * the difficulty will revert back to the original difficulty at game start
-         */
-        if (playerOneScore > playerTwoScore) {
-            if (ballXPosition < width - width / 4) {
-                playerTwoYPosition = ballYPosition - (PLAYER_HEIGHT / 2);
-            } else {
-                playerTwoYPosition = ballYPosition > playerTwoYPosition + PLAYER_HEIGHT / 2
-                        ? playerTwoYPosition += 2.2
-                        : playerTwoYPosition - 2.2;
-            }
-        }
-        if (playerOneScore < playerTwoScore) {
-            if (ballXPosition < width - width / 8) {
-                playerTwoYPosition = ballYPosition - PLAYER_HEIGHT;
-            } else {
-                playerTwoYPosition = ballYPosition > playerTwoYPosition + PLAYER_HEIGHT / 2
-                        ? playerTwoYPosition += 1.15
-                        : playerTwoYPosition - 1.15;
-            }
-        }
-
+        gc.strokeLine(width / 2, height, width / 2, height * -1);// draw center line and paddles
     }
 }
