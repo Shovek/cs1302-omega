@@ -1,9 +1,2 @@
-#!/bin/bash
-
-OPTS="-q -e" # quiet and produce execution error messages
-JFX="-Dprism.order=sw" # specify the software renderer
-
-set -ex
-mvn $OPTS clean
-mvn $OPTS compile
-mvn $OPTS exec:java $JFX $@
+javac -d bin -p $JAVAFX_HOME/lib --add-modules javafx.controls pong/Pong.java
+java -cp bin -Dprism.order=sw -p $JAVAFX_HOME/lib --add-modules javafx.controls pong.Pong
