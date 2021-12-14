@@ -23,11 +23,11 @@ import javafx.scene.shape.Line;
  */
 public class OmegaApp extends Application {
 
-    private static final int width = 800;
-    private static final int height = 600;
-    private static final int PLAYER_HEIGHT = 100;
-    private static final int PLAYER_WIDTH = 15;
-    private static final double BALL_SIZE = 20;
+    private int width = 800;
+    private int height = 600;
+    private int playerHeight = 100;
+    private int playerWidth = 15;
+    private double ballSize = 20;
     private double ballYSpeed = 1;
     private double ballXSpeed = 1;
     private double playerOneYPosition = height / 2;
@@ -38,7 +38,7 @@ public class OmegaApp extends Application {
     private int playerTwoScore = 0;
     private boolean gameIsStarted;
     private int playerOneXPosition = 0;
-    private int playerTwoXPosition = width - PLAYER_WIDTH;
+    private int playerTwoXPosition = width - playerWidth;
 
     // main
     public static void main(String[] args) {
@@ -51,7 +51,7 @@ public class OmegaApp extends Application {
 
     /**
      * {@inheritDoc}
-     * 
+     *
      * @param stage Stage object.
      * @throws Exception
      */
@@ -84,16 +84,14 @@ public class OmegaApp extends Application {
         if (gameIsStarted) {
             ballXPosition += ballXSpeed;  // ball movement
             ballYPosition += ballYSpeed;
-            if (playerOneScore == playerTwoScore) {  // computer movement
-                if (ballXPosition < width - width / 4) {
-                    playerTwoYPosition = ballYPosition - (PLAYER_HEIGHT / 2);
-                } else {
-                    playerTwoYPosition = ballYPosition > playerTwoYPosition + PLAYER_HEIGHT / 2
+            if (ballXPosition < width - width / 4) { //computer movement
+                playerTwoYPosition = ballYPosition - (playerHeight / 2);
+            } else {
+                playerTwoYPosition = ballYPosition > playerTwoYPosition + playerHeight / 2
                             ? playerTwoYPosition += 1.525
                             : playerTwoYPosition - 1.525;
-                }
             }
-            gc.fillOval(ballXPosition, ballYPosition, BALL_SIZE, BALL_SIZE); // drawing the ball
+            gc.fillOval(ballXPosition, ballYPosition, ballSize, ballSize); // drawing the ball
         } else {
             gc.setStroke(Color.WHITE);
             gc.setTextAlign(TextAlignment.CENTER);
@@ -111,20 +109,20 @@ public class OmegaApp extends Application {
         if (ballYPosition > height || ballYPosition < 0) { // ball stays in canvas
             ballYSpeed *= -1;
         }
-        if (ballXPosition > playerTwoXPosition + PLAYER_WIDTH) { // player score increment
+        if (ballXPosition > playerTwoXPosition + playerWidth) { // player score increment
             playerOneScore++;
             gameIsStarted = false;
         }
-        if (ballXPosition < playerOneXPosition - PLAYER_WIDTH) { // computer score increment
+        if (ballXPosition < playerOneXPosition - playerWidth) { // computer score increment
             playerTwoScore++;
             gameIsStarted = false;
         }
         // // ball speed increase after every bounce between sides
-        if (((ballXPosition + BALL_SIZE > playerTwoXPosition) && ballYPosition >= playerTwoYPosition
-                && ballYPosition <= playerTwoYPosition + PLAYER_HEIGHT) ||
-                ((ballXPosition < playerOneXPosition + PLAYER_WIDTH)
+        if (((ballXPosition + ballSize > playerTwoXPosition) && ballYPosition >= playerTwoYPosition
+                && ballYPosition <= playerTwoYPosition + playerHeight) ||
+                ((ballXPosition < playerOneXPosition + playerWidth)
                         && ballYPosition >= playerOneYPosition
-                        && ballYPosition <= playerOneYPosition + PLAYER_HEIGHT)) {
+                        && ballYPosition <= playerOneYPosition + playerHeight)) {
             Random rand = new Random();
             int redirectionAngler = (rand.nextInt(4) - 5) == 0 ? 4 : -4;
             ballYSpeed += Math.signum(ballYSpeed) * redirectionAngler;
@@ -133,8 +131,8 @@ public class OmegaApp extends Application {
             ballYSpeed *= -1;
         }
         gc.fillText(playerOneScore + "\t" + playerTwoScore, width / 2, 100); // show score
-        gc.fillRect(playerTwoXPosition, playerTwoYPosition, PLAYER_WIDTH, PLAYER_HEIGHT);
-        gc.fillRect(playerOneXPosition, playerOneYPosition, PLAYER_WIDTH, PLAYER_HEIGHT);
+        gc.fillRect(playerTwoXPosition, playerTwoYPosition, playerWidth, playerHeight);
+        gc.fillRect(playerOneXPosition, playerOneYPosition, playerWidth, playerHeight);
         gc.strokeLine(width / 2, height, width / 2, height * -1);// draw center line and paddles
     }
 }
